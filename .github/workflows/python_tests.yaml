@@ -12,28 +12,35 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest # Or 'macos-latest', 'windows-latest' if your tests require a specific OS
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
-      # Checks out your repository under $GITHUB_WORKSPACE, so your workflow can access it.
       uses: actions/checkout@v4
 
     - name: Set up Python
-      # Sets up a Python environment. You can specify a version (e.g., '3.9', '3.10', '3.11').
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11' # Ensure this matches your development environment or a compatible version
+        python-version: '3.11'
+        cache: 'pip' # Enable caching to speed up future runs
 
     - name: Install dependencies
-      # Install project dependencies from requirements.txt
       run: |
         python -m pip install --upgrade pip
+        
+        # --- FIX FOR DISK SPACE ERROR ---
+        # Install CPU-only versions of PyTorch first (saves ~3GB)
+        # We must install torch, torchvision, and torchaudio from the CPU index
+        pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+        # -------------------------------
+
+        # Now install the rest of the requirements
+        # (Pip will see torch is already installed and skip the huge download)
         pip install -r requirements.txt
-        # Install tqdm explicitly if it's used but not in requirements.txt (as discussed)
+        
+        # Install explicit dependencies if needed
         pip install tqdm
 
     - name: Run Unit Tests
-      # Discover and run all tests in the 'tests' directory.
       run: |
         python -m unittest discover tests
