@@ -27,14 +27,14 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        
+
         # 1. Install CPU-only PyTorch first (Prevents 3GB+ download)
         pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
-        
+
         # 2. Install the rest of the requirements
         # (Make sure you removed 'torch' from requirements.txt!)
         pip install -r requirements.txt
-        
+
         # 3. Install explicit tools
         pip install tqdm
 
