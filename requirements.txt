@@ -8,7 +8,6 @@ lxml
 tqdm
 trafilatura
 sentence-transformers
-torch
 scipy
 torch-geometric
 networkx
