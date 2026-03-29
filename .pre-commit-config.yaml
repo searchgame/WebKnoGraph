@@ -15,11 +15,13 @@ repos:
         exclude: >
           (?x)(
             ^results/|
+            ^results_.*/|
             .*\.ipynb$|
             .*\.png$|.*\.jpg$|.*\.jpeg$|.*\.gif$|.*\.svg$|
             .*\.pdf$|.*\.zip$|.*\.bin$|.*\.pt$|.*\.onnx$|
             .*\.csv$|.*\.tsv$|.*\.jsonl$|.*\.ndjson$
           )
+
       - id: end-of-file-fixer
         files: >
           (?x)^(
@@ -28,21 +30,26 @@ repos:
             README\.md|
             \.github/.*\.(yml|yaml)$
           )$
-        exclude: ^results/
+        exclude: ^results/|^results_.*/
+
       - id: check-yaml
       - id: check-toml
       - id: check-json
       - id: check-merge-conflict
       - id: debug-statements
+
       - id: check-added-large-files
         args: [--maxkb=5120]
-        exclude: ^results/
+        exclude: ^results/|^results_.*/
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.8.4
     hooks:
       - id: ruff
-        args: [--fix, --exit-non-zero-on-fix]
-        exclude: ^notebooks/.*\.ipynb$|^results/.*\.ipynb$
+        args:
+          - --fix
+          - --exit-non-zero-on-fix
+        exclude: ^notebooks/.*\.ipynb$|^results.*?/.*\.ipynb$
+
       - id: ruff-format
-        exclude: ^notebooks/.*\.ipynb$|^results/.*\.ipynb$
+        exclude: ^notebooks/.*\.ipynb$|^results.*?/.*\.ipynb$
